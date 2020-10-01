@@ -1,0 +1,8 @@
+# Steps to deploy Azure 
+
+az login
+az group create -l eastus -n DoutorSaude
+az acr create --name DoutorSaudeRegistry --resource-group DoutorSaude --sku basic --admin-enabled true
+az appservice plan create -g DoutorSaude -n DoutorSaudeServicePlan -l eastus --is-linux --sku B1
+az acr build --registry DoutorSaudeRegistry --resource-group DoutorSaude --image doctorhealth-app .
+az webapp create -g DoutorSaude -p DoutorSaudeServicePlan -n doctorhealth-app -i doutorsauderegistry.azurecr.io/doctorhealth-app:latest
