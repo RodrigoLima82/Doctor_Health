@@ -6,3 +6,7 @@ matplotlib
 bokeh
 joblib
 category-encoders
+keras
+tensorflow
+nibabel
+opencv-contrib-python
