@@ -7,6 +7,7 @@ import keras
 import numpy as np
 import nibabel as nib
 import streamlit as st
+import category_encoders as ce 
 import matplotlib.pyplot as plt
 from IPython.display import Image
 from keras import backend as K
