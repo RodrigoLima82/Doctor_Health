@@ -18,6 +18,7 @@ from functions.image_classification import *
 from tensorflow.keras import backend as K 
 import base64
 
+
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 def main():

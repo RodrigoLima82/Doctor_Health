@@ -23,7 +23,6 @@ from tensorflow.compat.v1.logging import INFO, set_verbosity
 set_verbosity(INFO)
 K.set_image_data_format("channels_first")
 
-
 # Função para preparar um dataframe com as feaures de Estratificacao de Riscos
 def getStratRiskFeatures():
 
