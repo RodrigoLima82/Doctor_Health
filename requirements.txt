@@ -1,10 +1,6 @@
-streamlit
-imageio
-nibabel
-bokeh
-joblib
 matplotlib
 scipy
+h5py==2.10.0
 pandas
 numpy
 Pillow
@@ -12,4 +8,8 @@ keras
 scikit_learn
 opencv-python
 tensorflow
-category-encoders
+streamlit
+imageio
+nibabel
+bokeh
+joblib
