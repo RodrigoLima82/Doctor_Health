@@ -23,10 +23,10 @@ from tensorflow.compat.v1.logging import INFO, set_verbosity
 set_verbosity(INFO)
 K.set_image_data_format("channels_first")
 
-# Função para preparar um dataframe com as feaures de Estratificacao de Riscos
+## Função para preparar um dataframe com as feaures de Estratificacao de Riscos
 def getStratRiskFeatures():
 
-    race   = st.sidebar.selectbox("Race",("Caucasian","AfricanAmerican","Other","Asian","Hispanic"))
+    race   = st.sidebar.selectbox("Race",("Caucasian", "AfricanAmerican", "Other", "Asian", "Hispanic"))
     gender = st.sidebar.radio("Gender",("Female","Male"), key = 'gender')
     age    = st.sidebar.selectbox("Age",("[0-10)","[10-20)","[20-30)","[30-40)","[40-50)","[50-60)","[60-70)","[70-80)","[80-90)","[90-100)"))
     admission_type_id = st.sidebar.slider("Admission Type", 1,8,key='admission_type_id')
