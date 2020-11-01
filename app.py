@@ -6,15 +6,14 @@ import joblib
 import PIL
 from bokeh.models.widgets import Div
 from sklearn.preprocessing import StandardScaler
-import category_encoders as ce 
+#import category_encoders as ce 
 import keras
 import json
 import nibabel as nib
-import matplotlib.pyplot as plt
-import util as util
-from util import *
-from utils import *
-from tensorflow.keras.models import model_from_json
+
+from functions.utils import *
+from functions.image_classification import *
+
 from tensorflow.keras import backend as K 
 import base64
 
@@ -31,7 +30,7 @@ def main():
 
     st.write('<style>div.Widget.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "About"]
+    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "Breast Cancer", "About"]
     choice = st.sidebar.selectbox("Menu", activities)
 
     if choice == "Home":
@@ -177,42 +176,16 @@ def main():
     
     if choice == "MRI Brain Tumor":
         sub_activities = ["Test", "Predict"]
-        sub_choice = st.sidebar.selectbox("MRI Brain Tumor", sub_activities)
-
-        def dice_coefficient(y_true, y_pred, axis=(1, 2, 3),epsilon=0.00001):
-            dice_numerator   = 2. * K.sum(y_true * y_pred, axis=axis) + epsilon
-            dice_denominator = K.sum(y_true, axis=axis) + K.sum(y_pred, axis=axis) + epsilon
-            dice_coefficient = K.mean((dice_numerator)/(dice_denominator))
-            return dice_coefficient
-
-        def soft_dice_loss(y_true, y_pred, axis=(1, 2, 3), epsilon=0.00001):
-            dice_numerator   = 2. * K.sum(y_true * y_pred, axis=axis) + epsilon
-            dice_denominator = K.sum(y_true**2, axis=axis) + K.sum(y_pred**2, axis=axis) + epsilon
-            dice_loss        = 1 - K.mean((dice_numerator)/(dice_denominator))
-            return dice_loss
-
-        def load_model():
-            model_weights = 'model.hdf5'
-            model_json    = 'model.json'
-            with open(model_json) as json_file:
-                loaded_model = model_from_json(json_file.read())
-            loaded_model.load_weights(model_weights)
-            return loaded_model
-
-        def load_case(image_nifty_file, label_nifty_file):
-            image = np.array(nib.load(image_nifty_file).get_fdata())
-            label = np.array(nib.load(label_nifty_file).get_fdata())    
-            return image, label
-                
-                
+        sub_choice = st.sidebar.selectbox("Action", sub_activities)
+        
         if sub_choice == "Test":    
 
-            model = load_model()
-            image, label = load_case("imagesTr/BRATS_003.nii.gz", "labelsTr/BRATS_003.nii.gz")
+            #model = load_model()
+            image, label = load_case("fe_mri_brain_tumor/imagesTr/BRATS_003.nii.gz", "fe_mri_brain_tumor/labelsTr/BRATS_003.nii.gz")
             
-            util.visualize_data_gif(util.get_labeled_image(image, label))
+            visualize_data_gif(get_labeled_image(image, label))
 
-            """### Auto-Segmentação de regiões de um Tumor Cerebral usando MRI"""
+            """### Auto-segmentation of regions of a brain tumor using MRI"""
             file_ = open("/tmp/gif.gif", "rb")
             contents = file_.read()
             data_url = base64.b64encode(contents).decode("utf-8")
@@ -222,11 +195,27 @@ def main():
                 f'<img src="data:image/gif;base64,{data_url}" alt="teste">',
                 unsafe_allow_html=True,
             )
+            st.write(" ")            
+
+    if choice == "Breast Cancer":
+        sub_activities = ["Test", "Predict"]
+        sub_choice = st.sidebar.selectbox("Action", sub_activities)
+
+        if sub_choice == "Test":    
+
+            uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
+            if uploaded_file is not None:
+                image = PIL.Image.open(uploaded_file)
+                st.image(image, caption='Uploaded Breast Image.',  width=100)
+                st.write("")
+                st.write("Classifying...")
+                label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
+                if label == 0:
+                    st.write("The image has NO invasive ductal carcinoma")
+                else:
+                    st.write("The image has invasive ductal carcinoma")
+            
             st.write(" ")
-
-            #if st.button('Make predictions'):
-            #    pred = util.predict_and_viz(image, label, model, .5, loc=(130, 130, 77))                    
-
 
     if choice == 'About':
         st.markdown("### Who I am")
