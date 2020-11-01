@@ -116,19 +116,28 @@ def main():
 
         if sub_choice == "Test":    
 
-            uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
-            if uploaded_file is not None:
-                image = PIL.Image.open(uploaded_file)
-                st.image(image, caption='Uploaded Breast Image.',  width=100)
-                st.write("")
-                st.write("Classifying...")
-                label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
-                if label == 0:
-                    st.write("The image has NO invasive ductal carcinoma")
-                else:
-                    st.write("The image has invasive ductal carcinoma")
+            LOCAL_MP4_FILE = "video/breastcancer.mp4"
+
+            # play local video
+            video_file = open(LOCAL_MP4_FILE, 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
 
             st.write(" ")
+
+            #uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
+            #if uploaded_file is not None:
+            #    image = PIL.Image.open(uploaded_file)
+            #    st.image(image, caption='Uploaded Breast Image.',  width=100)
+            #    st.write("")
+            #    st.write("Classifying...")
+            #    label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
+            #    if label == 0:
+            #        st.write("The image has NO invasive ductal carcinoma")
+            #    else:
+            #        st.write("The image has invasive ductal carcinoma")
+
+            #st.write(" ")
 
     # ============================== HEART DISEASE ======================================================= #
     if choice == "Heart Disease":
@@ -137,22 +146,32 @@ def main():
 
         if sub_choice == "Predict":    
 
-            df = getHeartDiseaseFeatures()
-            st.write(df)                
-            sex = df['sexo'][0]
+            LOCAL_MP4_FILE = "video/heartdisease.mp4"
 
-            if (sex == 0):
-                img = PIL.Image.open("fe_heart_disease/images/maria.png")
-            else:
-                img = PIL.Image.open("fe_heart_disease/images/bob.png")
-            
-            st.image(img,caption="")
+            # play local video
+            video_file = open(LOCAL_MP4_FILE, 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
+
+            st.write(" ")
 
 
-            model = keras.models.load_model('fe_heart_disease/model/model_heart.h5')
-            X = np.asarray(df).astype(np.float32)
-            prediction = model.predict(X)
-            st.write("Heart disease can occur at the age of " + str(round(prediction[0][0],0)) + " years old")
+            #df = getHeartDiseaseFeatures()
+            #st.write(df)                
+            #sex = df['sexo'][0]
+
+            #if (sex == 0):
+            #    img = PIL.Image.open("fe_heart_disease/images/maria.png")
+            #else:
+            #    img = PIL.Image.open("fe_heart_disease/images/bob.png")
+            # 
+            #st.image(img,caption="")
+
+
+            #model = keras.models.load_model('fe_heart_disease/model/model_heart.h5')
+            #X = np.asarray(df).astype(np.float32)
+            #prediction = model.predict(X)
+            #st.write("Heart disease can occur at the age of " + str(round(prediction[0][0],0)) + " years old")
 
     # ============================== HEART MONITOR ======================================================= #
     if choice == "Heart Monitor":
