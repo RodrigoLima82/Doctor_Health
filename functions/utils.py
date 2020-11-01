@@ -125,6 +125,46 @@ def getStratRiskFeatures():
 
     return df
 
+# Função para preparar um dataframe com as feaures de Doenca do Coracao
+def getHeartDiseaseFeatures():
+
+    sexo = st.sidebar.radio("Gender",("Female","Male"), key = 'sexo')
+    tipo_dor = st.sidebar.radio("Chest Pain Type", ("0","1","2","3","4"), key='tipo_dor')
+    pressao_sanguinea = st.sidebar.slider("Resting Blood Pressure", 0.0, 250.0, step=1.0, key='pressao_sanguinea')
+    colesterol = st.sidebar.slider("Serum Cholestoral in mg/dl", 0.0, 250.0, step=0.1, key='colesterol')
+    acucar_sangue = st.sidebar.radio("Fasting Blood Sugar > 120 mg/dl",("No","Yes"), key = 'acucar_sangue')
+    eletro = st.sidebar.radio("Resting Electrocardiographic Results",("0","1","2"), key = 'eletro')
+    max_batimento_cardiaco = st.sidebar.radio("maximum heart rate achieved (0: normal, 1: having ST-T wave abnormality, 2: showing probable or definite left ventricular hypertrophy)",("0","1","2"), key = 'max_batimento_cardiaco')
+    angina = st.sidebar.radio("Exercise Unduced Angina",("No","Yes"), key = 'angina')
+    oldpeak = st.sidebar.slider("ST depression induced by exercise relative to rest", 0.0, 10.0, step=0.1, key='oldpeak')
+    slope = st.sidebar.slider("Slope of the peak exercise ST segment", 0.0, 10.0, step=0.1, key='slope')
+    ca = st.sidebar.slider("Number of major vessels (0-3) colored by flourosopy	", 0.0, 3.0, step=1.0,key='ca')
+    thal = st.sidebar.radio("Thal: 3=normal; 6=fixed defect; 7=reversable defect",("3","6","7"), key = 'thal')
+
+    df = pd.DataFrame({'sexo': [sexo],  
+                        'tipo_dor': [tipo_dor],
+                        'pressao_sanguinea': [pressao_sanguinea],
+                        'colesterol': [colesterol],
+                        'acucar_sangue': [acucar_sangue],
+                        'eletro': [eletro],
+                        'max_batimento_cardiaco': [max_batimento_cardiaco],
+                        'angina': [angina],
+                        'oldpeak': [oldpeak],
+                        'slope': [slope],
+                        'ca': [ca],
+                        'thal': [thal]})
+
+    # Recoding de variáveis categóricas binárias
+    df['sexo'] = df['sexo'].replace('Male', 1)
+    df['sexo'] = df['sexo'].replace('Female', 0)
+
+    df['acucar_sangue'] = df['acucar_sangue'].replace('Yes', 1)
+    df['acucar_sangue'] = df['acucar_sangue'].replace('No', 0)
+    
+    df['angina'] = df['angina'].replace('Yes', 1)
+    df['angina'] = df['angina'].replace('No', 0)
+
+    return df
 
 def calcula_comorbidade(row):
     

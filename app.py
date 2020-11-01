@@ -10,6 +10,7 @@ import category_encoders as ce
 import keras
 import json
 import nibabel as nib
+import tensorflow as tf
 
 from functions.utils import *
 from functions.image_classification import *
@@ -21,24 +22,27 @@ st.set_option('deprecation.showfileUploaderEncoding', False)
 
 def main():
 
-    html_page = """
-    <div style="background-color:blue;padding=10px">
-        <p style='color:white;text-align:center;font-size:20px;font-weight:bold'>DOCTOR HEALTH</p>
-    </div>
-              """
-    st.markdown(html_page, unsafe_allow_html=True)    
-
     st.write('<style>div.Widget.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "Breast Cancer", "Heart Monitor", "About"]
+    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "Breast Cancer", "Heart Disease", "Heart Monitor", "About"]
     choice = st.sidebar.selectbox("Menu", activities)
 
+    # ============================== HOME ======================================================= #
     if choice == "Home":
-        st.markdown("### ")
-        st.write(" ")
-        image = PIL.Image.open("images/image02.jpg")
-        st.image(image,caption="", width=700)
 
+        st.header("Hello Folks! \nI am your Doctor Health and my goal is to offer the best experience for you.\nI already have some functions that can be used to you monitoring your health.")
+        st.subheader("Features")
+        st.write("- Risk Stratification Using Electronic Health Records")
+        st.write("- Auto-Segmentation of Brain Tumor on Magnetic Resonance Imaging (MRI)")
+        st.write("- Detection of Breast Cancer Injuries")
+        st.write("- Heart Disease Prediction based on Age")
+        st.write("- Heart Monitoring")
+
+        image = PIL.Image.open("images/doctor-robot.png")
+        st.image(image,caption="")
+
+
+    # ============================== STRATIFYING RISKS ======================================================= #
     if choice == "Stratifying Risks":
         sub_activities = ["Predict"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
@@ -80,6 +84,7 @@ def main():
                 st.subheader("Predicted Readmission Risk for Patient")
                 st.write("Risk: ", df_risco['Risco'][0])
     
+    # ============================== MRI BRAIN TUMOR ======================================================= #
     if choice == "MRI Brain Tumor":
         sub_activities = ["Test", "Predict"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
@@ -103,21 +108,52 @@ def main():
             )
             st.write(" ")            
 
+    # ============================== BREAST CANCER ======================================================= #
     if choice == "Breast Cancer":
         sub_activities = ["Test", "Predict"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
         if sub_choice == "Test":    
 
-            LOCAL_MP4_FILE = "video/breastcancer.mp4"
-
-            # play local video
-            video_file = open(LOCAL_MP4_FILE, 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
+            uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
+            if uploaded_file is not None:
+                image = PIL.Image.open(uploaded_file)
+                st.image(image, caption='Uploaded Breast Image.',  width=100)
+                st.write("")
+                st.write("Classifying...")
+                label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
+                if label == 0:
+                    st.write("The image has NO invasive ductal carcinoma")
+                else:
+                    st.write("The image has invasive ductal carcinoma")
 
             st.write(" ")
 
+    # ============================== HEART DISEASE ======================================================= #
+    if choice == "Heart Disease":
+        sub_activities = ["Predict"]
+        sub_choice = st.sidebar.selectbox("Action", sub_activities)
+
+        if sub_choice == "Predict":    
+
+            df = getHeartDiseaseFeatures()
+            st.write(df)                
+            sex = df['sexo'][0]
+
+            if (sex == 0):
+                img = PIL.Image.open("fe_heart_disease/images/maria.png")
+            else:
+                img = PIL.Image.open("fe_heart_disease/images/bob.png")
+            
+            st.image(img,caption="")
+
+
+            model = keras.models.load_model('fe_heart_disease/model/model_heart.h5')
+            X = np.asarray(df).astype(np.float32)
+            prediction = model.predict(X)
+            st.write("Heart disease can occur at the age of " + str(round(prediction[0][0],0)) + " years old")
+
+    # ============================== HEART MONITOR ======================================================= #
     if choice == "Heart Monitor":
         sub_activities = ["Test", "Predict"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
