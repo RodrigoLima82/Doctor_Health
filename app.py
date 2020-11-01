@@ -30,7 +30,7 @@ def main():
 
     st.write('<style>div.Widget.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "Breast Cancer", "About"]
+    activities = ["Home", "Stratifying Risks", "MRI Brain Tumor", "Breast Cancer", "Heart Monitor", "About"]
     choice = st.sidebar.selectbox("Menu", activities)
 
     if choice == "Home":
@@ -109,18 +109,28 @@ def main():
 
         if sub_choice == "Test":    
 
-            uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
-            if uploaded_file is not None:
-                image = PIL.Image.open(uploaded_file)
-                st.image(image, caption='Uploaded Breast Image.',  width=100)
-                st.write("")
-                st.write("Classifying...")
-                label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
-                if label == 0:
-                    st.write("The image has NO invasive ductal carcinoma")
-                else:
-                    st.write("The image has invasive ductal carcinoma")
-            
+            LOCAL_MP4_FILE = "video/breastcancer.mp4"
+
+            # play local video
+            video_file = open(LOCAL_MP4_FILE, 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
+
+            st.write(" ")
+
+    if choice == "Heart Monitor":
+        sub_activities = ["Test", "Predict"]
+        sub_choice = st.sidebar.selectbox("Action", sub_activities)
+
+        if sub_choice == "Test":    
+
+            LOCAL_MP4_FILE = "video/heartmonitoring.mp4"
+
+            # play local video
+            video_file = open(LOCAL_MP4_FILE, 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
+
             st.write(" ")
 
     if choice == 'About':
