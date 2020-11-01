@@ -6,7 +6,7 @@ import joblib
 import PIL
 from bokeh.models.widgets import Div
 from sklearn.preprocessing import StandardScaler
-#import category_encoders as ce 
+import category_encoders as ce 
 import keras
 import json
 import nibabel as nib
