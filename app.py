@@ -39,8 +39,8 @@ def main():
         st.write("- Heart Disease Prediction based on Age")
         st.write("- Heart Monitoring")
 
-        image = PIL.Image.open("images/doctor-robot.png")
-        st.image(image,caption="")
+        #image = PIL.Image.open("images/doctor-robot.png")
+        #st.image(image,caption="")
 
 
     # ============================== STRATIFYING RISKS ======================================================= #
