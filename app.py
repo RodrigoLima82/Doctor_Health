@@ -87,10 +87,10 @@ def main():
     
     # ============================== MRI BRAIN TUMOR ======================================================= #
     if choice == "MRI Brain Tumor":
-        sub_activities = ["Test", "Predict"]
+        sub_activities = ["Sample"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
         
-        if sub_choice == "Test":    
+        if sub_choice == "Sample":    
 
             #model = load_model()
             image, label = load_case("fe_mri_brain_tumor/imagesTr/BRATS_003.nii.gz", "fe_mri_brain_tumor/labelsTr/BRATS_003.nii.gz")
@@ -111,11 +111,28 @@ def main():
 
     # ============================== BREAST CANCER ======================================================= #
     if choice == "Breast Cancer":
-        sub_activities = ["Test", "Predict"]
+        sub_activities = ["Predict", "Sample"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
-        if sub_choice == "Test":    
+        if sub_choice == "Predict":    
 
+            uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
+            if uploaded_file is not None:
+                image = PIL.Image.open(uploaded_file)
+                st.image(image, caption='Uploaded Breast Image.',  width=100)
+                st.write("")
+                st.write("Classifying...")
+                label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
+                if label == 0:
+                    st.write("The image has NO invasive ductal carcinoma")
+                else:
+                    st.write("The image has invasive ductal carcinoma")
+
+            st.write(" ")
+            
+        elif sub_choice == "Sample":    
+            
+            st.write("Video sample")
             LOCAL_MP4_FILE = "video/breastcancer.mp4"
 
             # play local video
@@ -125,27 +142,33 @@ def main():
 
             st.write(" ")
 
-            #uploaded_file = st.file_uploader("Choose a Breast image ...", type="png")
-            #if uploaded_file is not None:
-            #    image = PIL.Image.open(uploaded_file)
-            #    st.image(image, caption='Uploaded Breast Image.',  width=100)
-            #    st.write("")
-            #    st.write("Classifying...")
-            #    label = img_classification(image, 'fe_breast_cancer/model/modelo.h5')
-            #    if label == 0:
-            #        st.write("The image has NO invasive ductal carcinoma")
-            #    else:
-            #        st.write("The image has invasive ductal carcinoma")
-
-            #st.write(" ")
 
     # ============================== HEART DISEASE ======================================================= #
     if choice == "Heart Disease":
-        sub_activities = ["Predict"]
+        sub_activities = ["Predict", "Sample"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
         if sub_choice == "Predict":    
 
+            df = getHeartDiseaseFeatures()
+            st.write(df)                
+            sex = df['sexo'][0]
+
+            if (sex == 0):
+                img = PIL.Image.open("fe_heart_disease/images/maria.png")
+            else:
+                img = PIL.Image.open("fe_heart_disease/images/bob.png")
+             
+            st.image(img,caption="")
+
+            model = keras.models.load_model('fe_heart_disease/model/model_heart.h5')
+            X = np.asarray(df).astype(np.float32)
+            prediction = model.predict(X)
+            st.write("Heart disease can occur at the age of " + str(round(prediction[0][0],0)) + " years old")
+
+            st.write(" ")
+        
+        elif sub_choice == "Sample":
             LOCAL_MP4_FILE = "video/heartdisease.mp4"
 
             # play local video
@@ -156,29 +179,12 @@ def main():
             st.write(" ")
 
 
-            #df = getHeartDiseaseFeatures()
-            #st.write(df)                
-            #sex = df['sexo'][0]
-
-            #if (sex == 0):
-            #    img = PIL.Image.open("fe_heart_disease/images/maria.png")
-            #else:
-            #    img = PIL.Image.open("fe_heart_disease/images/bob.png")
-            # 
-            #st.image(img,caption="")
-
-
-            #model = keras.models.load_model('fe_heart_disease/model/model_heart.h5')
-            #X = np.asarray(df).astype(np.float32)
-            #prediction = model.predict(X)
-            #st.write("Heart disease can occur at the age of " + str(round(prediction[0][0],0)) + " years old")
-
     # ============================== HEART MONITOR ======================================================= #
     if choice == "Heart Monitor":
-        sub_activities = ["Test", "Predict"]
+        sub_activities = ["Sample"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
-        if sub_choice == "Test":    
+        if sub_choice == "Sample":    
 
             LOCAL_MP4_FILE = "video/heartmonitoring.mp4"
 
