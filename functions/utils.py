@@ -17,7 +17,7 @@ from keras.layers import Activation,Conv3D,MaxPooling3D,UpSampling3D
 from tensorflow.keras.layers import Conv2D
 from keras.layers.merge import concatenate
 #from keras.optimizers import Adam
-from keras.utils import to_categorical
+#from keras.utils import to_categorical
 from tensorflow.compat.v1.logging import INFO, set_verbosity
 
 set_verbosity(INFO)
