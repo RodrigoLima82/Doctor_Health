@@ -9,11 +9,14 @@ RUN cp config.toml ~/.streamlit/config.toml
 RUN cp credentials.toml ~/.streamlit/credentials.toml
 
 RUN apt-get update
-RUN apt-get install 'ffmpeg'\
+RUN apt-get install 'pkg-config' \
+    'ffmpeg'\
     'libsm6'\ 
+    'libhdf5-100' \
+    'libhdf5-dev' \
     'libxext6'\
     'libgl1-mesa-glx'\
-    'libgl1-mesa-dev'  -y
+    'libgl1-mesa-dev'  -y      
 
 WORKDIR /app
 ENTRYPOINT ["streamlit", "run"]
