@@ -12,7 +12,6 @@ RUN apt-get update
 RUN apt-get install 'pkg-config' \
     'ffmpeg'\
     'libsm6'\ 
-    'libhdf5-100' \
     'libhdf5-dev' \
     'libxext6'\
     'libgl1-mesa-glx'\
