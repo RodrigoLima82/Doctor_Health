@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from IPython.display import Image
 from keras import backend as K
 from keras.layers import Input
+from keras.models import load_model
 from tensorflow.keras.models import Model
 from keras.layers import Activation,Conv3D,MaxPooling3D,UpSampling3D
 from tensorflow.keras.layers import Conv2D
