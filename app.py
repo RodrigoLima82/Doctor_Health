@@ -232,7 +232,7 @@ def main():
                     # Realizando as previsoes
                     x = processamento(sinais_mat, tamanho_janela)
                     prob_x, ann_x = previsoes(modelo, x)
-                    st.write('Probability FA (%): ', (prob_x[0, 0] * 100).round(2))
+                    st.write('Probability FA (%): ', prob_x[0, 0])
 
                     # Dataframe para o risco estratificado
                     df_risco = pd.DataFrame({'Probability':[prob_x[0, 0]], 'HR':HR})
