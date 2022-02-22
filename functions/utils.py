@@ -8,6 +8,9 @@ import numpy as np
 import nibabel as nib
 import streamlit as st
 import category_encoders as ce 
+import glob
+import random
+from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from IPython.display import Image
 from keras import backend as K
@@ -21,6 +24,8 @@ from tensorflow.keras.optimizers import Adam
 #from keras.utils import to_categorical
 from tensorflow.keras.utils import to_categorical
 from tensorflow.compat.v1.logging import INFO, set_verbosity
+import biosppy
+from biosppy.signals import ecg
 
 set_verbosity(INFO)
 K.set_image_data_format("channels_first")
@@ -335,6 +340,40 @@ def feature_engineering(dados):
 
 
     return dados
+
+## Função para preparar um dataframe com as feaures de Estratificacao de Riscos
+def processamento(x, maxlen):    
+    x =  np.nan_to_num(x)
+    x =  x[0, 0:maxlen]
+    x = x - np.mean(x)
+    x = x / np.std(x)
+    tmp = np.zeros((1, maxlen))
+    tmp[0, :len(x)] = x.T 
+    x = tmp
+    x = np.expand_dims(x, axis = 2) 
+    del tmp
+    return x
+
+# Funcao para realizar as previsoes
+def previsoes(model, x):    
+    prob = model.predict(x)
+    ann = np.argmax(prob)
+    return prob, ann    
+
+# Função para estratificar o risco
+def classifica_risco_cardiaco(registro):
+
+    # Condição 1
+    if registro[0] >= 0.8 and registro[1] == 1.0 : 
+        return 'High'
+        
+    # Condição 2 
+    elif (registro[0] >= 0.6 or registro[0] < 0.8) and registro[1] == 1.0 : 
+        return 'Median'
+            
+    # Condição 3
+    else:
+        return 'Low'    
 
 # Função para estratificar o risco
 def classifica_risco(row):

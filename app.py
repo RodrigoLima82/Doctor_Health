@@ -236,7 +236,7 @@ def main():
 
                     # Dataframe para o risco estratificado
                     df_risco = pd.DataFrame({'Probability':[prob_x[0, 0]], 'HR':HR})
-                    df_risco['Risk'] = df_risco.apply(classifica_risco, axis = 1)
+                    df_risco['Risk'] = df_risco.apply(classifica_risco_cardiaco, axis = 1)
                     st.write('Risk: ', df_risco['Risk'][0])
 
                     # Plot
