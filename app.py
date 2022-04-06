@@ -229,9 +229,7 @@ def main():
                     # Previsões com o modelo (retorna as probabilidades)
                     prob_x, ann_x = previsoes(modelo, x)
 
-                    # Realizando as previsoes
-                    x = processamento(sinais_mat, tamanho_janela)
-                    prob_x, ann_x = previsoes(modelo, x)
+                    # Imprimindo resultado
                     st.write('Probability FA (%): ', prob_x[0, 0])
 
                     # Dataframe para o risco estratificado
