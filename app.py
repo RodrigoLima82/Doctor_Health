@@ -254,6 +254,7 @@ def main():
     # ============================== HEART MONITOR ======================================================= #
     if choice == "Heart Monitor":
         sub_activities = ["Sample"]
+        sub_activities = ["Predict"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
         if sub_choice == "Sample":    
@@ -266,6 +267,74 @@ def main():
             st.video(video_bytes)
 
             st.write(" ")
+
+        if sub_choice == "Predict":    
+
+            # Extrai o conteúdo do arquivo
+            uploaded_file = False
+
+            if st.checkbox('Do you want upload data for predict?'):
+                uploaded_file = st.file_uploader("Choose a .MAT file", type="mat")
+
+            if st.button('Run'):
+
+                if uploaded_file:
+                    sinais = loadmat(uploaded_file)
+
+                    sinais_mat = sinais['val']
+
+                    # Extraindo o Batimento Cardiaco do Paciente
+                    for channelid, channel in enumerate(sinais_mat):
+                        resultado = ecg.ecg(signal = channel, sampling_rate = 300, show = False)
+                        heart_rate = np.zeros_like(channel, dtype = 'float')
+                        heart_rate = resultado['heart_rate']    
+                        
+                        st.write('Max BPM: ', max(heart_rate).round(0))
+                        
+                        try:
+                            if max(heart_rate) > 130:
+                                HR = 1
+                            else:
+                                HR = 0
+                        except:
+                            continue    
+
+                    # Carregamos o modelo   
+                    modelo = load_model('fe_heart_sensor/model/ResNet_30s_34lay_16conv.hdf5')
+
+                    # Valores constantes
+                    frequencia = 300
+                    tamanho_janela = 30 * frequencia
+
+                    # Fazendo a previsao
+                    x = processamento(sinais_mat, tamanho_janela)
+
+                    # Previsões com o modelo (retorna as probabilidades)
+                    prob_x, ann_x = previsoes(modelo, x)
+
+                    # Realizando as previsoes
+                    x = processamento(sinais_mat, tamanho_janela)
+                    prob_x, ann_x = previsoes(modelo, x)
+                    st.write('Probability FA (%): ', (prob_x[0, 0] * 100).round(2))
+
+                    # Dataframe para o risco estratificado
+                    df_risco = pd.DataFrame({'Probability':[prob_x[0, 0]], 'HR':HR})
+                    df_risco['Risk'] = df_risco.apply(classifica_risco, axis = 1)
+                    st.write('Risk: ', df_risco['Risk'][0])
+
+                    # Plot
+                    x_axis = np.linspace(0., float(len(sinais_mat[0]) / 300), num = len(sinais_mat[0]))
+                    plt.rcParams.update({'font.size': 14})
+                    fig, ax = plt.subplots(figsize = (16,5))
+
+                    ax.plot(x_axis, sinais_mat[0], 'blue')
+                    ax.axis([0, len(sinais_mat[0]) / 300, -2200, 2200])
+
+                    ax.set_title('ECG Patient')
+                    ax.set_xlabel("Time (in seconds)")
+                    ax.set_ylabel("Milli Volts")
+
+                    st.write(fig)
 
     if choice == 'About':
         st.markdown("### Who I am")

@@ -19,7 +19,7 @@ from keras.models import load_model
 from tensorflow.keras.models import Model
 from keras.layers import Activation,Conv3D,MaxPooling3D,UpSampling3D
 from tensorflow.keras.layers import Conv2D
-from keras.layers.merge import concatenate
+from keras.layers import concatenate
 #from keras.optimizers import Adam
 from tensorflow.keras.optimizers import Adam
 #from keras.utils import to_categorical
@@ -414,3 +414,37 @@ def get_labeled_image(image, label, is_categorical=False):
     # color labels
     labeled_image += label[:, :, :, 1:] * 255
     return labeled_image
+
+## Função para preparar um dataframe com as feaures de Estratificacao de Riscos
+def processamento(x, maxlen):    
+    x =  np.nan_to_num(x)
+    x =  x[0, 0:maxlen]
+    x = x - np.mean(x)
+    x = x / np.std(x)
+    tmp = np.zeros((1, maxlen))
+    tmp[0, :len(x)] = x.T 
+    x = tmp
+    x = np.expand_dims(x, axis = 2) 
+    del tmp
+    return x
+
+# Funcao para realizar as previsoes
+def previsoes(model, x):    
+    prob = model.predict(x)
+    ann = np.argmax(prob)
+    return prob, ann    
+
+# Função para estratificar o risco
+def classifica_risco(registro):
+
+    # Condição 1
+    if registro[0] >= 0.8 and registro[1] == 1.0 : 
+        return 'High'
+        
+    # Condição 2 
+    elif (registro[0] >= 0.6 or registro[0] < 0.8) and registro[1] == 1.0 : 
+        return 'Medium'
+            
+    # Condição 3
+    else:
+        return 'Low'    
