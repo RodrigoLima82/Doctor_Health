@@ -253,8 +253,7 @@ def main():
 
     # ============================== HEART MONITOR ======================================================= #
     if choice == "Heart Monitor":
-        sub_activities = ["Sample"]
-        sub_activities = ["Predict"]
+        sub_activities = ["Predict", "Sample"]
         sub_choice = st.sidebar.selectbox("Action", sub_activities)
 
         if sub_choice == "Sample":    
