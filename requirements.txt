@@ -1,13 +1,13 @@
 matplotlib
 scipy
 pandas
-numpy
+numpy==1.21
 Pillow
 keras
 scikit_learn
 opencv-python
 tensorflow
-h5py < 3.0.0
+h5py
 streamlit
 imageio
 nibabel
