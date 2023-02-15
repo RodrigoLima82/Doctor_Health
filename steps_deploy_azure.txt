@@ -2,9 +2,9 @@
 
 az login
 az group create -l eastus -n doctorhealthapp-rg
-az acr create --name doctorhealthappacr --resource-group doctorhealthapp-rg --sku basic --admin-enabled true
+az acr create --name doctorhealthappacr2 --resource-group doctorhealthapp-rg --sku basic --admin-enabled true
 az appservice plan create -g doctorhealthapp-rg -n doctorhealthapp-plan -l eastus --is-linux --sku B1
 
 
-az acr build --registry doctorhealthappacr --resource-group doctorhealthapp-rg --image doctorhealthapp .
-az webapp create -g doctorhealthapp-rg -p doctorhealthapp-plan -n doctorhealthapp -i doctorhealthappacr.azurecr.io/doctorhealthapp:latest
+az acr build --registry doctorhealthappacr2 --resource-group doctorhealthapp-rg --image doctorhealthapp .
+az webapp create -g doctorhealthapp-rg -p doctorhealthapp-plan -n doctorhealthapp -i doctorhealthappacr2.azurecr.io/doctorhealthapp:latest
