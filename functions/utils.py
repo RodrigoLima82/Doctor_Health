@@ -438,11 +438,11 @@ def previsoes(model, x):
 def classifica_risco(registro):
 
     # Condição 1
-    if registro[0] >= 0.8 and registro[1] == 1.0 : 
+    if registro[0] >= 0.8 : 
         return 'High'
         
     # Condição 2 
-    elif (registro[0] >= 0.6 or registro[0] < 0.8) and registro[1] == 1.0 : 
+    elif (registro[0] >= 0.6 or registro[0] < 0.8) : 
         return 'Medium'
             
     # Condição 3
